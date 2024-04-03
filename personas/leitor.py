@@ -51,3 +51,15 @@ class DataReader:
         response = sdk.run_sql_query(slug=slug, result_format='csv')
         data = pd.read_csv(StringIO(response))
         return data
+
+    def read_csv(self, folder, file_name):
+        """
+        Reads a CSV file from a specified folder and file name. The method constructs the full file path 
+        based on the given folder and file name, and then reads the CSV file into a pandas DataFrame.
+        
+        :param folder: The folder where the CSV file is located.
+        :param file_name: The name of the CSV file to read.
+        :return: A pandas DataFrame containing the data from the CSV file.
+        """
+        file_path = os.path.join(self.file_dir, folder, file_name)
+        return pd.read_csv(file_path)
