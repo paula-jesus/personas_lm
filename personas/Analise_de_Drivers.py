@@ -1,12 +1,13 @@
 import streamlit as st
 from utils import EstilizarPagina, GerarTabelas
+from estilizador import Dataframes
 
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
 
+st.subheader("Last Mile - Análise de Drivers  🚛")
 col1, col2 = st.columns([4, 1])
-
-col1.subheader("Last Mile - Análise de Drivers  🚛")
+col1.header("Personas")
 
 tabela = GerarTabelas()
 drivers_itinerarios = tabela.gerar_dados("drivers_itinerarios")
@@ -17,6 +18,26 @@ tabela_personas = tabela.gerar_dados("personas")
 tabela_personas.dropna(subset=['zip'], inplace=True)
 
 tabela_personas['zip'] = tabela_personas['zip'].replace('-', '', regex=True)
+
+tabela_personas.dropna(subset=['vicinity'], inplace=True)
+
+cols = list(tabela_personas.columns)
+cols.remove('driver_id')
+cols.insert(0, 'driver_id')  
+tabela_personas = tabela_personas[cols]
+
+drivers_itinerarios['zip'] = drivers_itinerarios['zip'].astype(str)
+drivers_itinerarios['zip'] = drivers_itinerarios['zip'].str.split('.').str[0]
+drivers_itinerarios['zip'] = drivers_itinerarios['zip'].str.zfill(8)
+
+def title_except(s, exceptions):
+    word_list = s.split()
+    final = [word.lower() if word in exceptions else word.title() for word in word_list]
+    return ' '.join(final)
+
+exceptions = ["de", "do", "da", "Da", "De", "Do", "dos", "Dos", "das", "Das"]
+tabela_personas['vicinity'] = tabela_personas['vicinity'].astype(str).apply(lambda x: title_except(x, exceptions))
+
 
 with col2.popover("Sobre a página"):           
     st.write("**Diferença entre as regiões:**")
@@ -50,7 +71,15 @@ with tab1:
         filtered_personas = tabela_personas[tabela_personas['zip'].str.startswith(cep)]
         unique_driver_count = filtered_personas['driver_id'].nunique()
         st.divider()
-        st.metric(label="Quantidade de Drivers", value=unique_driver_count)
+        unique_driver_count_str = "{:,}".format(unique_driver_count).replace(",", ".")
+        st.metric(label="Quantidade de Drivers", value=unique_driver_count_str)
+        botao_tabela = st.button("Tabela de Drivers")
+        if botao_tabela:
+            filtered_personas = filtered_personas.head(800)
+            filtered_personas.reset_index(drop=True, inplace=True)
+            centered_table = Dataframes.generate_html(filtered_personas)
+            st.write("  ")
+            st.write(centered_table, unsafe_allow_html=True)
 
     if formato_busca == "Bairro/Cidade":
 
@@ -68,7 +97,14 @@ with tab1:
             tabela_personas = tabela_personas[tabela_personas['vicinity'].isin(selected_bairro)]
         unique_driver_count = tabela_personas['driver_id'].nunique()
         st.divider()
-        st.metric(label="Quantidade de Drivers", value=unique_driver_count)
+        unique_driver_count_str = "{:,}".format(unique_driver_count).replace(",", ".")
+        st.metric(label="Quantidade de Drivers", value=unique_driver_count_str)
+        botao_tabela = st.button("Tabela de Drivers", key="tab12")
+        if botao_tabela:
+            tabela_personas = tabela_personas.head(800)
+            centered_table = Dataframes.generate_html(tabela_personas)
+            st.write("  ")
+            st.write(centered_table, unsafe_allow_html=True)
 
 with tab2:
 
@@ -90,7 +126,15 @@ with tab2:
         drivers_itinerarios = drivers_itinerarios[drivers_itinerarios['zip'].str.startswith(cep)]
         unique_driver_count = drivers_itinerarios['driver_id'].nunique()
         st.divider()
-        st.metric(label="Quantidade de Drivers", value=unique_driver_count)
+        unique_driver_count_str = "{:,}".format(unique_driver_count).replace(",", ".")
+        st.metric(label="Quantidade de Drivers", value=unique_driver_count_str)
+        botao_tabela = st.button("Tabela de Drivers", key="tab21")
+        if botao_tabela:
+            drivers_itinerarios = drivers_itinerarios.head(800)
+            drivers_itinerarios.reset_index(drop=True, inplace=True)
+            centered_table = Dataframes.generate_html(drivers_itinerarios)
+            st.write("  ")
+            st.write(centered_table, unsafe_allow_html=True)
 
     if formato_busca == "Bairro/Cidade":
 
@@ -108,4 +152,11 @@ with tab2:
             drivers_itinerarios = drivers_itinerarios[drivers_itinerarios['destination_neighborhood'].isin(selected_bairro)]
         unique_driver_count = drivers_itinerarios['driver_id'].nunique()
         st.divider()
-        st.metric(label="Quantidade de Drivers", value=unique_driver_count)
+        unique_driver_count_str = "{:,}".format(unique_driver_count).replace(",", ".")
+        st.metric(label="Quantidade de Drivers", value=unique_driver_count_str)
+        botao_tabela = st.button("Tabela de Drivers", key="tab22")
+        if botao_tabela:
+            tabela_personas = tabela_personas.head(800)
+            centered_table = Dataframes.generate_html(tabela_personas)
+            st.write("  ")
+            st.write(centered_table, unsafe_allow_html=True)        
