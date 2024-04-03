@@ -36,7 +36,7 @@ class EstilizarPagina:
         st.set_page_config(**self.PAGE_CONFIG)
         self.estilizador.apply_general_css()
         self.estilizador.apply_sidebar_css()
-        st.subheader("Last Mile - Análise de Drivers  🚛")
+        # st.subheader("Last Mile - Análise de Drivers  🚛")
 
 class GerarTabelas:
     """
