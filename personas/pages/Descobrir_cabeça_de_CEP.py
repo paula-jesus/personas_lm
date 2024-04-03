@@ -6,7 +6,7 @@ from estilizador import  Dataframes
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
 
-bairros = pd.read_csv('Bairros_por_CEP.csv')
+bairros = pd.read_csv('bairros.csv')
 cidades = pd.read_csv('Cidades_por_CEP.csv')
 
 cidades = cidades.rename(columns={'Cep inicial': 'Cep Inicial', 'Cep final': 'Cep Final'})
