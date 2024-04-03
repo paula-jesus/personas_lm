@@ -6,8 +6,8 @@ from estilizador import  Dataframes
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
 
-bairros = pd.read_csv('Bairros por CEP.csv')
-cidades = pd.read_csv('Cidades por CEP.csv')
+bairros = pd.read_csv('Bairros_por_CEP.csv')
+cidades = pd.read_csv('Cidades_por_CEP.csv')
 
 cidades = cidades.rename(columns={'Cep inicial': 'Cep Inicial', 'Cep final': 'Cep Final'})
 bairros = pd.concat([bairros, cidades])
