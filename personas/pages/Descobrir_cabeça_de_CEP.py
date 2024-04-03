@@ -7,6 +7,17 @@ from leitor import DataReader
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
 
+col1, col2 = st.columns([4, 1])
+
+col1.subheader("Last Mile - Análise de Drivers  🚛")
+
+with col2.popover("Sobre a página"):
+    st.write("Para descobrir a cabeça de um CEP de uma região, selecione o estado, cidade e bairro desejados.")
+    st.write("Após a seleção, a cabeça do CEP da região será exibida, juntamente com o CEP inicial e final da região e uma tabela com os demais bairros e/ou cidades que também são contemplados pela cabeça de CEP encontrada.")
+    st.write("Quanto mais dígitos do CEP forem selecionados, mais específica será a região encontrada.")
+
+st.write("  ")
+
 leitor_obj = DataReader()
 bairros = leitor_obj.read_csv('CSV', 'Bairros por CEP.csv')
 cidades = leitor_obj.read_csv('CSV', 'Cidades por CEP.csv')
