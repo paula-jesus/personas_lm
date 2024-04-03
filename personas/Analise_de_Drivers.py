@@ -1,9 +1,14 @@
 import streamlit as st
 from utils import EstilizarPagina, GerarTabelas
 from estilizador import Dataframes
+import time
 
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
+
+text = "Dados carregando... Duração entre 1 e 5 minutos ⌛"
+loading_message = st.empty()
+loading_message.progress(0, text=text)
 
 st.subheader("Last Mile - Análise de Drivers  🚛")
 col1, col2 = st.columns([4, 1])
@@ -11,6 +16,7 @@ col1.header("Personas")
 
 tabela = GerarTabelas()
 drivers_itinerarios = tabela.gerar_dados("drivers_itinerarios")
+loading_message.progress(30, text=text)
 
 tabela = GerarTabelas()
 tabela_personas = tabela.gerar_dados("personas")
@@ -106,6 +112,7 @@ with tab1:
             st.write("  ")
             st.write(centered_table, unsafe_allow_html=True)
 
+loading_message.progress(70, text=text)
 with tab2:
 
     formato_busca = st.radio(
@@ -160,3 +167,7 @@ with tab2:
             centered_table = Dataframes.generate_html(tabela_personas)
             st.write("  ")
             st.write(centered_table, unsafe_allow_html=True)        
+
+loading_message.progress(100, text=text)
+time.sleep(1)
+loading_message.empty()

@@ -3,9 +3,14 @@ from utils import EstilizarPagina
 import pandas as pd
 from estilizador import  Dataframes
 from leitor import DataReader
+import time
 
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
+
+text = "Dados carregando... Duração entre 0 e 2 minutos ⌛"
+loading_message = st.empty()
+loading_message.progress(0, text=text)
 
 st.subheader("Last Mile - Análise de Drivers  🚛")
 
@@ -31,6 +36,8 @@ bairros['Bairro'] = bairros['Bairro'].fillna('-')
 
 demais_bairros = bairros.copy()
 
+loading_message.progress(30, text=text)
+
 col1, col2, col3 = st.columns(3)
 st.write("  ")
 selected_estado = col1.selectbox("Selecione o estado", bairros['Estado'].unique(), index=None, key='b1')
@@ -42,6 +49,8 @@ if  selected_bairro:
     bairros = bairros[bairros['Bairro'] == selected_bairro]
 qtd_digitos = st.slider("Quantidade de dígitos do CEP", 1, 8, 3, key='b4')
 st.divider()
+
+loading_message.progress(70, text=text)
 
 if selected_cidade:
 
@@ -66,3 +75,6 @@ if selected_cidade:
 
     col3.write(centered_table, unsafe_allow_html=True)
 
+loading_message.progress(100, text=text)
+time.sleep(1)
+loading_message.empty()
