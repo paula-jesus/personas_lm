@@ -2,12 +2,14 @@ import streamlit as st
 from utils import EstilizarPagina
 import pandas as pd
 from estilizador import  Dataframes
+from leitor import DataReader
 
 estilizador = EstilizarPagina()
 estilizador.set_page_config()
 
-bairros = pd.read_csv('bairros.csv')
-cidades = pd.read_csv('Cidades_por_CEP.csv')
+leitor_obj = DataReader()
+bairros = leitor_obj.read_csv('CSV', 'Bairros por CEP.csv')
+cidades = leitor_obj.read_csv('CSV', 'Cidades por CEP.csv')
 
 cidades = cidades.rename(columns={'Cep inicial': 'Cep Inicial', 'Cep final': 'Cep Final'})
 bairros = pd.concat([bairros, cidades])
